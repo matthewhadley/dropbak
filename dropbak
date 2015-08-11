@@ -1,0 +1,29 @@
+#!/bin/bash
+usage()
+{
+cat << EOF
+
+rsync files to a (dropbox) location, filtering on .gitignore files
+
+USAGE:
+
+dropbak <source> <destination> [interval]
+
+EOF
+exit 1
+}
+
+if [ -z "$2" ];then
+  usage
+fi
+
+# INTERVAL is minimum time between each rsync
+INTERVAL=$3
+if [ -z "$INTERVAL" ];then
+  INTERVAL=500
+fi
+
+while true; do
+  rsync -ra --delete --stats --human-readable --filter=':- .gitignore' --filter=".- $HOME/.gitignore" "$1" "$2"
+  sleep $INTERVAL
+done
