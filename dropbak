@@ -17,13 +17,17 @@ if [ -z "$2" ];then
   usage
 fi
 
-# INTERVAL is minimum time between each rsync
 INTERVAL=$3
 if [ -z "$INTERVAL" ];then
-  INTERVAL=500
+  INTERVAL=300
 fi
 
 while true; do
+  T="$(date +%s)"
   rsync -ra --delete --stats --human-readable --filter=':- .gitignore' --filter=".- $HOME/.gitignore" "$1" "$2"
-  sleep $INTERVAL
+  T="$(($(date +%s)-T))"
+  let D=INTERVAL-T
+  if [ $D -gt 0 ]; then
+    sleep $D
+  fi
 done
