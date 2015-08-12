@@ -9,6 +9,11 @@ USAGE:
 
 dropbak <source> <destination> [interval]
 
+OPTIONS:
+    -h      show usage info
+    -i      interval time to run [seconds]
+    -d      delay initial run by [seconds]
+
 EOF
 exit 1
 }
@@ -17,7 +22,21 @@ if [ -z "$2" ];then
   usage
 fi
 
-INTERVAL=$3
+OPTIND=3
+while getopts "hi:d:" option
+do
+  case $option in
+    h) usage;;
+    i) INTERVAL=$OPTARG;;
+    d) DELAY=$OPTARG;;
+    \?) usage;exit 2;;
+  esac
+done
+
+if [ ! -z "$DELAY" ];then
+  SLEEP "$DELAY"
+fi
+
 if [ -z "$INTERVAL" ];then
   INTERVAL=300
 fi
