@@ -3,7 +3,7 @@ usage()
 {
 cat << EOF
 
-rsync files to a (dropbox) location, filtering on .gitignore files
+rsync files to a (dropbox) location, filtering on .gitignore and .dbignore files
 
 USAGE:
 
@@ -41,9 +41,17 @@ if [ -z "$INTERVAL" ];then
   INTERVAL=300
 fi
 
+if [ -f "$HOME/.dbignore" ];then
+  HOME_DBIGNORE="--filter=.- $HOME/.dbignore"
+fi
+
+if [ -f "$HOME/.gitignore" ];then
+  HOME_GITIGNORE="--filter=.- $HOME/.gitignore"
+fi
+
 while true; do
   T="$(date +%s)"
-  rsync -ra --delete --stats --human-readable --filter=':- .gitignore' --filter=".- $HOME/.gitignore" "$1" "$2"
+  rsync -ra --delete --stats --human-readable --filter=':- .dbignore' "$HOME_DBIGNORE" --filter=':- .gitignore' "$HOME_GITIGNORE" "$1" "$2"
   T="$(($(date +%s)-T))"
   let D=INTERVAL-T
   if [ $D -gt 0 ]; then
