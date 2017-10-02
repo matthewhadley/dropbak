@@ -53,7 +53,7 @@ fi
 
 while true; do
   T="$(date +%s)"
-  rsync -ra --delete --stats --human-readable "${FILTER_DBIGNORE[@]}" "${FILTER_GITIGNORE[@]}" "$1" "$2"
+  rsync -ra --delete --delete-excluded --stats --human-readable "${FILTER_DBIGNORE[@]}" "${FILTER_GITIGNORE[@]}" "$1" "$2"
   T="$(($(date +%s)-T))"
   let D=INTERVAL-T
   if [ $D -gt 0 ]; then
