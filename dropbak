@@ -41,12 +41,12 @@ if [ -z "$INTERVAL" ];then
   INTERVAL=300
 fi
 
-FILTER_DBIGNORE=("--filter=:- .dbignore_global")
+FILTER_DBIGNORE=("--filter=:- .dbignore")
 if [ -f "$HOME/.dbignore_global" ];then
   FILTER_DBIGNORE+=("--filter=.- $HOME/.dbignore_global")
 fi
 
-FILTER_GITIGNORE=("--filter=:- .gitignore_global")
+FILTER_GITIGNORE=("--filter=:- .gitignore")
 if [ -f "$HOME/.gitignore_global" ];then
   FILTER_GITIGNORE+=("--filter=.- $HOME/.gitignore_global")
 fi
