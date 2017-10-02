@@ -41,17 +41,19 @@ if [ -z "$INTERVAL" ];then
   INTERVAL=300
 fi
 
-if [ -f "$HOME/.dbignore" ];then
-  HOME_DBIGNORE="--filter=.- $HOME/.dbignore"
+FILTER_DBIGNORE=("--filter=:- .dbignore_global")
+if [ -f "$HOME/.dbignore_global" ];then
+  FILTER_DBIGNORE+=("--filter=.- $HOME/.dbignore_global")
 fi
 
-if [ -f "$HOME/.gitignore" ];then
-  HOME_GITIGNORE="--filter=.- $HOME/.gitignore"
+FILTER_GITIGNORE=("--filter=:- .gitignore_global")
+if [ -f "$HOME/.gitignore_global" ];then
+  FILTER_GITIGNORE+=("--filter=.- $HOME/.gitignore_global")
 fi
 
 while true; do
   T="$(date +%s)"
-  rsync -ra --delete --stats --human-readable --filter=':- .dbignore' "$HOME_DBIGNORE" --filter=':- .gitignore' "$HOME_GITIGNORE" "$1" "$2"
+  rsync -ra --delete --stats --human-readable "${FILTER_DBIGNORE[@]}" "${FILTER_GITIGNORE[@]}" "$1" "$2"
   T="$(($(date +%s)-T))"
   let D=INTERVAL-T
   if [ $D -gt 0 ]; then
